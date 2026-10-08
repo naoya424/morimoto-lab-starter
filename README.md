@@ -13,6 +13,8 @@ Next.js（画面）・FastAPI（API）・MongoDB（データベース）の3サ�
 | Mac | **[Mac用の利用手順](docs/setup-mac.md)** |
 | Windows | **[Windows用の利用手順](docs/setup-windows.md)** |
 
+[更新履歴（CHANGELOG.md）](CHANGELOG.md)では、ひな形と手順書の変更点を日付別に確認できます。
+
 それぞれの手順書に、次の内容をまとめています。
 
 1. 必要なアプリの準備（WindowsはWSL 2の設定を含む）
@@ -22,7 +24,20 @@ Next.js（画面）・FastAPI（API）・MongoDB（データベース）の3サ�
 5. 画面を編集し、変更をGitHubへ保存
 6. 終了・翌日の再開・困ったときの対処
 
-GitHubの操作はGitHub Desktop、編集はVS Codeを使う流れです。起動コマンドはMacではターミナル、WindowsではPowerShellに入力します。
+**GitHub Desktopは任意です。** 各OSの手順書から、次の取得方法を選べます。編集はVS Codeを例にし、起動コマンドはMacではターミナル、WindowsではPowerShellに入力します。
+
+| 取得方法 | GitHub Desktop | 使い方 |
+| --- | --- | --- |
+| A：GitHub Desktop | 使用する | 画面操作で取得・変更履歴の保存を行う |
+| B：ZIP | 不要（Gitも不要） | 公開ひな形をダウンロードして、まず起動する |
+| C：Gitコマンド | 不要 | Gitで取得・変更履歴の保存を行う。認証例にはGitHub CLIを使う |
+
+GitHub Desktopを使わない手順へのリンク：
+
+- Mac：[ZIPで取得](docs/setup-mac.md#4b-zipで取得する) ／ [Gitコマンドで取得](docs/setup-mac.md#4c-gitコマンドで取得する)
+- Windows：[ZIPで取得](docs/setup-windows.md#5b-zipで取得する) ／ [Gitコマンドで取得](docs/setup-windows.md#5c-gitコマンドで取得する)
+
+ZIPで試すだけなら、自分用リポジトリの作成とGitHubへの保存は省略できます。Docker Desktopは、どの方法でも起動に必要です。
 Node.js・Python・MongoDBをPCへ個別に入れる必要はありません。MAMPとは独立して使えます。
 
 この共通ひな形と手順書は公開しています。閲覧に招待やGitHubへのログインは不要です。
@@ -87,6 +102,7 @@ morimoto-lab-starter/
 ├── compose.yaml
 ├── .env.example              # 各自が.envへコピーして使う
 ├── .gitignore
+├── CHANGELOG.md              # ひな形と手順書の更新履歴
 └── README.md
 ```
 

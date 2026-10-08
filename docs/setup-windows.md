@@ -1,13 +1,23 @@
 # Windows用：森本研究室 システム開発スターター 利用手順
 
 初めて使う方が、準備から起動、画面の編集、GitHubへの保存まで進めるための手順です。
-初回は1〜9、次回からは10を使ってください。
+初回は利用する方法に合わせて1〜9を進め、次回からは10を使ってください。
 
 **Windows 11のIntel／AMD搭載PCで、Docker DesktopのWSL 2機能を使う**流れを説明します。日常の操作はWindowsの **PowerShell** で行い、Ubuntuのターミナルを開く必要はありません。
 
 自分の研究用プロジェクト名は **`my-research`** を例にします。別の名前にした場合は、以降のパスにある `my-research` も読み替えてください。
 
-[READMEへ戻る](../README.md) ／ [Mac用の手順](setup-mac.md)
+[READMEへ戻る](../README.md) ／ [Mac用の手順](setup-mac.md) ／ [更新履歴](../CHANGELOG.md)
+
+**GitHub Desktopは必須ではありません。** 取得方法を次の3つから1つ選びます。Docker Desktopは、どの方法でも起動に使います。
+
+| 方法 | 向いている使い方 | 読み進め方 |
+| --- | --- | --- |
+| A：GitHub Desktop | 画面操作で取得・変更履歴の保存を行う | 従来どおり順に進み、[手順5A](#5a-github-desktopで取得する)を使う |
+| B：ZIP | Git関連のアプリを入れず、まず動かしてみる | GitHub Desktopの導入と手順4を飛ばし、[手順5B](#5b-zipで取得する)へ進む |
+| C：Gitコマンド | コマンドで取得・変更履歴の保存を行う | GitHub Desktopの導入を飛ばし、手順4で自分用を作ってから[手順5C](#5c-gitコマンドで取得する)へ進む |
+
+取得後の設定・起動・画面編集・停止は共通です。ZIPで試すだけならGitHubアカウントも不要で、GitHubへの保存（手順9）は省略できます。
 
 ## 1. 最初に確認すること
 
@@ -15,14 +25,15 @@
 
 | 用意するもの | 何に使うか |
 | --- | --- |
-| GitHubアカウント | 研究用のプログラムを保存する |
+| GitHubアカウント | 方法A・Cで自分の研究用リポジトリを作り、プログラムを保存する |
 | StarterのURL | 共通ひな形と手順書を開く（閲覧は招待不要） |
 | WSL 2 | Windows上でDockerのLinux環境を動かす土台 |
 | Docker Desktop | 画面・API・データベースをまとめて動かす |
-| GitHub Desktop | プログラムの取得とGitHubへの保存を画面操作で行う |
+| GitHub Desktop（任意） | 方法Aで取得・保存を画面操作で行う。方法B・Cでは不要 |
+| Git（方法C）・GitHub CLI（認証例） | Gitコマンドで取得・保存する。認証済みならGitHub CLIの追加は不要 |
 | Visual Studio Code（以下、VS Code） | プログラムや設定を編集する |
 
-Node.js・Python・MongoDB・Gitのコマンドライン版を個別にインストールする必要はありません。この手順では、実行環境はDocker Desktop、Gitの操作はGitHub Desktopで扱います。XAMPPやMAMPも使いません。
+Node.js・Python・MongoDBをPCへ個別にインストールする必要はありません。実行環境はDocker Desktopで用意します。GitHub Desktopは方法Aだけで使います。方法BではGitも不要で、方法Cではコマンド用のGitを準備します。XAMPPやMAMPも使いません。
 
 ### PCの状態を確認する
 
@@ -97,7 +108,9 @@ Docker DesktopにはWSL **2.1.5以上** が必要で、最新への更新が推�
 
 このプロジェクトは **Linuxコンテナ** を使います。Windowsコンテナに切り替えて使っていたPCでは、Linuxコンテナへ戻してから進めます。
 
-### 3-2. GitHub Desktop
+### 3-2. GitHub Desktop（方法Aのみ）
+
+**方法B・Cでは、この項目を飛ばしてください。**
 
 1. [GitHub Desktop](https://desktop.github.com/)からWindows用をダウンロードします。
 2. インストーラーを開いてインストールし、GitHub Desktopを起動します。
@@ -114,6 +127,8 @@ Docker DesktopにはWSL **2.1.5以上** が必要で、最新への更新が推�
 この手順ではVS Codeのメニューからフォルダを開くため、`code` コマンドの設定は不要です。
 
 ## 4. 自分の研究用リポジトリを作る〈初回のみ〉
+
+方法A・Cで使う手順です。ZIPで試す方法Bでは、[手順5B](#5b-zipで取得する)へ進んでください。
 
 「リポジトリ」は、プログラムと変更履歴を保管する場所です。共通ひな形から、自分の研究用の保管場所を作ります。
 
@@ -141,6 +156,12 @@ Docker DesktopにはWSL **2.1.5以上** が必要で、最新への更新が推�
 
 ## 5. Windowsにプロジェクトを取得する〈初回のみ〉
 
+コマンドを入力する場合は、スタートメニューで「PowerShell」を検索し、管理者ではなく通常の方法で開きます。
+
+A・B・Cのいずれか1つを選びます。取得先にすでに研究用フォルダがある場合は上書きせず、別名を使って以降のパスも読み替えてください。
+
+### 5A. GitHub Desktopで取得する
+
 GitHubの内容をPCへ取得する操作を「Clone（クローン）」と呼びます。
 
 1. エクスプローラーの上部のアドレス欄に **`%USERPROFILE%`** と入力してEnterキーを押します。自分のユーザーフォルダが開きます。
@@ -159,6 +180,105 @@ C:\Users\自分のWindowsユーザー名\Projects\my-research
 この手順では、保存先をOneDrive内のデスクトップやドキュメントではなく、ユーザーフォルダ直下の `Projects` にそろえます。すでに同名のフォルダがある場合は内容を確認し、既存の研究ファイルに重ねず、新しく作る場合は別の名前を使います。
 
 参考：[GitHub Desktopでクローンする](https://docs.github.com/en/desktop/adding-and-cloning-repositories/cloning-and-forking-repositories-from-github-desktop)
+
+### 5B. ZIPで取得する
+
+GitHub Desktop・Git・GitHub CLIを入れず、公開中のひな形を取得する方法です。ファイルは編集できますが、変更履歴の管理やGitHubへの送信はまだ設定されません。
+
+1. ブラウザで [共通Starter](https://github.com/naoya424/morimoto-lab-starter)を開きます。ログインは不要です。
+2. ファイル一覧の上の **Code → Download ZIP** を選びます。
+3. ダウンロードしたZIPを右クリックし、**すべて展開** を選びます。ZIPを開いただけの状態では作業しません。
+4. 展開した中から、`compose.yaml`・`frontend`・`backend` が直接入っているフォルダ（通常は `morimoto-lab-starter-main`）を見つけ、**最初の起動前に** `my-research` へ名前を変えます。
+5. エクスプローラーのアドレス欄に `%USERPROFILE%` と入力し、その中に `Projects` フォルダを作ります。名前を変えた `my-research` をそこへ移動します。
+6. 最終的に `C:\Users\自分のWindowsユーザー名\Projects\my-research` の直下に `compose.yaml` があることを確認します。展開時に同じ名前のフォルダが二重になっていたら、内側のプロジェクトフォルダを使います。
+7. 次を実行し、`.env.example` も含まれていることを確認します。
+
+```powershell
+Set-Location "$env:USERPROFILE\Projects\my-research"
+Get-ChildItem -Force
+```
+
+続いて、[手順6：設定ファイルを準備する](#6-設定ファイルを準備する初回のみ)へ進みます。Docker Desktopの導入・起動は、この方法でも必要です。
+
+ZIPにはGitの管理情報（`.git`）が入っていません。そのため、ZIP版のフォルダで `git pull`・`git push` は使えません。また、更新版のZIPを自分の編集済みフォルダへそのまま重ねないでください。継続してGitHubへ保存する場合は、方法Cへ切り替えます。移行方法は手順9の「ZIPで取得した場合」を参照してください。
+
+参考：[GitHub公式・ZIPのダウンロード](https://docs.github.com/en/repositories/working-with-files/using-files/downloading-source-code-archives)
+
+### 5C. Gitコマンドで取得する
+
+GitHub Desktopを使わず、WindowsのPowerShellで操作する方法です。先に手順4で、自分の非公開リポジトリを作っておきます。
+
+**GitとGitHub CLIを準備する**
+
+通常のPowerShellで `git --version` と `gh --version` を実行します。両方のバージョンが表示される場合は、インストール済みです。
+
+未導入の場合、WinGetが使えるPCでは次を実行します。すでに入っているもののインストール行は省いてください。
+
+```powershell
+winget install --id Git.Git --exact --source winget
+winget install --id GitHub.cli --exact --source winget
+```
+
+画面の案内に従ってインストールを完了し、PowerShellをいったん閉じて開き直します。Windows Terminalを使っている場合も、新しいタブの追加だけでなく、ウインドウを閉じて新しいウインドウを開いてください。その後、次を確認します。
+
+```powershell
+git --version
+gh --version
+```
+
+`winget` が使えない場合は、[Git公式のWindows向け案内](https://git-scm.com/install/windows)からGit for Windowsを導入し、[GitHub CLI公式の導入案内](https://github.com/cli/cli#installation)にあるWindows用インストーラーを使います。この手順のIntel／AMDのPCではx64／amd64版を選びます。導入後はPowerShellを開き直してください。
+
+GitHub CLIは、ここではブラウザ経由でGitHubへログインするために使います。GitHub Desktopとは別のコマンド用ツールです。すでにGitで自分の非公開リポジトリを読み書きできる場合は、その認証方法を使って構いません。
+
+**GitHubへログインする〈初回のみ〉**
+
+以下はGitHub CLIを使う場合の手順です。既存のGit認証が設定済みなら、この項目は省略できます。
+
+```powershell
+gh auth login --hostname github.com --git-protocol https --web
+```
+
+表示されるコードと案内に従い、ブラウザで自分のGitHubアカウントへログインします。端末にGitの認証設定を尋ねる質問が出た場合は **Yes** を選びます。ブラウザでの操作を終えたら、元のPowerShellへ戻ります。
+
+次を実行し、Gitも同じログイン情報を利用できるようにします。
+
+```powershell
+gh auth setup-git --hostname github.com
+gh auth status
+```
+
+`github.com` に自分のアカウントでログイン済みと表示されれば準備完了です。通常のGitHubパスワードを `git clone` のパスワード欄に入力する方法ではありません。
+
+参考：[GitHub CLIのログイン](https://cli.github.com/manual/gh_auth_login)・[Gitとの認証連携](https://cli.github.com/manual/gh_auth_setup-git)
+
+**自分のリポジトリを取得する**
+
+次の `YOUR-USERNAME` は自分のGitHubユーザー名へ置き換えます。研究用リポジトリを別の名前で作った場合は、URLと保存先の `my-research` も変えます。取得先の同名フォルダが存在しないことを確認してください。
+
+```powershell
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\Projects"
+Set-Location "$env:USERPROFILE\Projects"
+git clone "https://github.com/YOUR-USERNAME/my-research.git" my-research
+Set-Location my-research
+git remote -v
+```
+
+表示された `origin` が **自分のユーザー名と研究用リポジトリ** を指していることを確認します。共通Starterの `naoya424/morimoto-lab-starter` を送信先にしないよう、自分用を取得してください。
+
+**変更履歴に使う名前・メールを設定する〈このプロジェクトで初回のみ〉**
+
+次の引用符の中は、そのまま使わず自分の情報へ置き換えます。メールアドレスを公開したくない場合は、GitHubの **Settings → Emails** で表示される自分用の `noreply` アドレスを使えます。
+
+```powershell
+git config user.name "自分の名前"
+git config user.email "自分のコミット用メールアドレス"
+```
+
+これらは今いる研究用リポジトリだけに設定されます。Gitの名前・メール設定は変更履歴の作成者情報で、GitHubへのログインとは別です。
+
+ここまでできたら、[手順6：設定ファイルを準備する](#6-設定ファイルを準備する初回のみ)へ進みます。取得方法が違っても、`.env` の準備とDockerでの起動方法は同じです。
+
+参考：[GitHub公式・Gitの初期設定](https://docs.github.com/en/get-started/git-basics/set-up-git)・[コマンドでのクローン](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
 
 ## 6. 設定ファイルを準備する〈初回のみ〉
 
@@ -296,12 +416,46 @@ docker compose restart frontend backend
 
 VS Codeの保存はWindows上のファイルの保存です。GitHubに残すには、次の操作も行います。
 
+### GitHub Desktopで取得した場合（方法A）
+
 1. GitHub Desktopを開き、**Current Repository** が自分の `my-research`、**Current Branch** が `main` であることを確認します。
 2. **Changes** で `frontend/src/app/page.tsx` の変更を選び、意図した編集だけが含まれているか確認します。
 3. 左下の **Summary** に `画面の見出しを変更` と入力します。
 4. **Commit to main** を押します。ここでPC上に変更履歴が記録されます。
 5. 上部の **Push origin** を押します。ここでGitHubへ送信されます。
 6. ブラウザで自分のリポジトリを開き、更新内容が反映されたことを確認します。
+
+### Gitコマンドで取得した場合（方法C）
+
+起動ログを表示している画面とは別に、PowerShellを開きます。次は、前の手順で見出しを編集した `page.tsx` を保存する例です。
+
+```powershell
+Set-Location "$env:USERPROFILE\Projects\my-research"
+git status
+git diff
+```
+
+変更内容を確認します。表示が長くなって操作できない場合は `q` で戻ります。保存対象を選び、もう一度内容を確認します。
+
+```powershell
+git add frontend/src/app/page.tsx
+git diff --cached
+```
+
+意図した変更だけが含まれていたら、変更履歴を記録してGitHubへ送ります。
+
+```powershell
+git commit -m "画面の見出しを変更"
+git push origin main
+```
+
+`commit` はPC上への履歴の保存、`push` はGitHubへの送信です。ブラウザで自分のリポジトリを開き、変更が反映されたことを確認します。別のファイルを編集した場合は、`git add` の後ろを保存したいファイルのパスへ変えます。
+
+### ZIPで取得した場合（方法B）
+
+VS Codeで保存すればPC上のファイルは更新されます。この時点ではGitHubへ送信されないため、GitHubへの保存手順は飛ばして構いません。
+
+後からGitHubへ保存したくなった場合は、自分用リポジトリを作り、方法Cで**既存のZIP版と別の名前のフォルダ**へクローンします。その後、ZIP版で編集したソースファイルだけを新しいフォルダへコピーし、方法Cの保存手順を行います。`.env` とMongoDBのデータはGitHubには移らず、データの移行は別作業です。ZIP版の元フォルダは、必要な内容を確認するまで残してください。
 
 **GitHubに保存されるのはプログラムとその変更履歴です。** `.env` とMongoDB内のメモは保存されません。実際の研究データのバックアップは、開発用プログラムの保存とは別に準備します。
 
@@ -335,7 +489,15 @@ docker compose up
 3. [http://localhost:3000](http://localhost:3000) を開きます。前日に保存したメモが残っていることも確認します。
 4. VS Codeで同じフォルダを開いて作業を続けます。
 
-他のPCでも同じリポジトリを編集した場合は、作業開始前にGitHub Desktopの **Fetch origin** を押し、**Pull origin** が表示されたら取り込みます。すでに未保存の変更があり競合の案内が出た場合は、変更を破棄せず管理者へ相談してください。
+他のPCでも同じリポジトリを編集した場合は、作業開始前に更新を取り込みます。
+
+- **方法A**：GitHub Desktopの **Fetch origin** を押し、**Pull origin** が表示されたら取り込みます。
+- **方法B**：ZIP版はGitHubと同期されません。同じフォルダで作業を再開でき、ZIPを毎回取り直す必要はありません。
+- **方法C**：プロジェクトのフォルダで `git status` を実行し、自分の変更が残っていないことを確認してから `git pull --ff-only` を実行します。
+
+自分の変更が残っている、または取り込み時に競合・エラーが出た場合は、変更を破棄せず管理者へ相談してください。GitHubから更新した内容に依存パッケージや設定の変更が含まれる場合は、`docker compose up --build` で起動します。
+
+共通Starterの変更点は [更新履歴](../CHANGELOG.md)で確認できます。テンプレートから作った自分のリポジトリには、共通Starterの更新は自動では入りません。`git pull` が取り込むのは、自分のリポジトリに保存された変更です。
 
 ## 11. 困ったとき
 
@@ -355,7 +517,11 @@ docker compose up
 | 画面の変更が反映されない | ファイルを保存したか、編集と起動が同じフォルダかを確認します。手順8の `docker compose restart frontend backend` を実行して再読み込みします。 |
 | 設定・依存パッケージを変更した | `package.json`・`package-lock.json`・`requirements.txt`・Dockerfile・`next.config.mjs` などの変更後は、Ctrl + Cで止めて `docker compose up --build` を実行します。 |
 | 空き容量不足でダウンロード・ビルドが止まる | Windowsのストレージを確認し、不要と判断できるファイルを整理してから再実行します。Dockerのボリュームにはデータがあるため、一括削除はしません。 |
-| GitHubへ送信できない | GitHub Desktopのログイン先と選択中のリポジトリを確認します。送信先は自分が作った研究用リポジトリです。 |
+| GitHubへ送信できない | 方法AではGitHub Desktopのログイン先と選択中のリポジトリを確認します。方法CでGitHub CLIを使っている場合は `gh auth status` と `git remote -v` を確認します。送信先は自分が作った研究用リポジトリです。 |
+| `git` / `gh` が見つからない | 方法Cの導入を終え、PowerShellを開き直してバージョンを確認します。ZIPで試す方法Bでは、これらのコマンドは不要です。 |
+| `not a git repository` | 方法BのZIP版にはGitの管理情報がありません。方法Cの場合は、クローンしたプロジェクトのフォルダにいるか確認します。 |
+| `destination path ... already exists` | 同名のフォルダがすでにあります。既存の研究ファイルを削除・上書きせず、新しく取得する場合は別のフォルダ名を使います。 |
+| `git push` が拒否される／`git pull --ff-only` が止まる | ログイン先・送信先・自分の変更を確認します。他の変更との調整が必要な場合は、強制送信や変更の破棄をせず管理者へ相談します。 |
 | フォルダ名や保存先を変えた後にメモが見えない | Composeが別のプロジェクトとして起動している可能性があります。元のフォルダ名・起動方法を確認し、データを削除せず管理者へ相談します。 |
 
 状態・ログは、別のPowerShellでプロジェクトのフォルダへ移動して確認します。
