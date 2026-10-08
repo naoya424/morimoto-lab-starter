@@ -30,7 +30,7 @@ flowchart TB
         mongodb --- data
     end
     browser -->|"localhost:3000"| frontend
-    external_ai["外部AI API<br/>OpenAIなど<br/>インターネット上"]
+    external_ai["外部AI API<br/>OpenAIなど"]
     backend -.->|"AI連携を追加する場合"| external_ai
 
     classDef screen fill:#eaf2ff,stroke:#3b6ea8,color:#16324f;
