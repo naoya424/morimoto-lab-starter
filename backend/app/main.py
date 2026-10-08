@@ -7,7 +7,7 @@ from app.db import get_db, lifespan
 from app.routes.sample import router as sample_router
 
 app = FastAPI(
-    title="Morimoto Lab API",
+    title="森本研究室 システム開発スターター API",
     lifespan=lifespan,
     docs_url="/api/docs",
     openapi_url="/api/openapi.json",

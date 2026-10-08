@@ -64,8 +64,8 @@ export default function Home() {
   return (
     <main>
       <header>
-        <p className="eyebrow">研究室共通の開発用ひな形</p>
-        <h1>Morimoto Lab Starter</h1>
+        <p className="eyebrow">研究システムづくりの共通ひな形</p>
+        <h1>森本研究室 システム開発スターター</h1>
         <p className="intro">メモを保存して、画面からデータベースまでの接続を確認できます。</p>
         <p className={`status ${connected ? "online" : ""}`} role="status">
           <span className="dot" aria-hidden="true" />
