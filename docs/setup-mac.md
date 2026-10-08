@@ -14,7 +14,7 @@
 | 用意するもの | 何に使うか |
 | --- | --- |
 | GitHubアカウント | 研究用のプログラムを保存する |
-| Starterへのアクセス権 | 非公開の共通ひな形を開く |
+| StarterのURL | 共通ひな形と手順書を開く（閲覧は招待不要） |
 | Docker Desktop | 画面・API・データベースをまとめて動かす |
 | GitHub Desktop | プログラムの取得とGitHubへの保存を画面操作で行う |
 | Visual Studio Code（以下、VS Code） | プログラムや設定を編集する |
@@ -74,9 +74,9 @@ Node.js・Python・MongoDB・Gitのコマンドライン版を個別にインス
 5. **Create repository** または **Create repository from template** を押します。
 6. 作成後のURLが `https://github.com/自分のユーザー名/my-research` になり、**Private** と表示されていることを確認します。
 
-Starterが「404」になる場合は、管理者からの招待を受け取り、承諾済みか確認してください。非公開のため、URLを知っているだけでは開けません。招待を受けたアカウントと、ログイン中のアカウントも確認します。
+共通Starterと手順書は公開されており、閲覧に招待やGitHubへのログインは不要です。「Use this template」から自分の研究用リポジトリを作るときは、自分のGitHubアカウントでログインします。
 
-自分のPrivateリポジトリを指導教員や共同開発者と共有する場合は、そのリポジトリにも別途アクセス権を付与します。元のStarterのアクセス権は引き継がれません。
+自分のPrivateリポジトリを指導教員や共同開発者と共有する場合は、その研究用リポジトリへ必要なメンバーを招待します。
 
 参考：[GitHub公式・テンプレートからの作成](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)
 
@@ -267,7 +267,7 @@ docker compose up
 
 | 状況・表示 | 確認・対処 |
 | --- | --- |
-| Starterが404になる | 招待を承諾したか、そのGitHubアカウントでログインしているかを確認します。 |
+| Starterが404になる | 本書のStarterリンクから開き直し、URLが正しいか確認します。公開されている共通Starterの閲覧に招待は不要です。 |
 | `cd` で `no such file or directory` | 保存先やフォルダ名が例と異なっています。GitHub Desktopの **Repository → Show in Finder** で実際の場所を確認します。 |
 | `command not found: docker` | Docker Desktopのインストールを終え、ターミナルを開き直します。続く場合はDocker DesktopのCLI設定と公式インストール手順を確認します。 |
 | `Cannot connect to the Docker daemon` | Docker Desktopを起動し、エンジンの準備が終わるまで待ちます。 |
