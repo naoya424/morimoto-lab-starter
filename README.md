@@ -16,7 +16,7 @@ Next.js（画面）・FastAPI（API）・MongoDB（データベース）の3サ�
 Docker Composeが、画面・API・データベースの3つをまとめて起動します。
 
 ```mermaid
-flowchart LR
+flowchart TB
     browser["ブラウザ<br/>メモを操作"]
     subgraph docker["Docker Desktop 内"]
         subgraph services["Composeで起動する3つのサービス"]
