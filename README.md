@@ -1,72 +1,59 @@
 # 森本研究室 システム開発スターター
 
+**研究システムづくりの共通ひな形**
+
 森本研究室のメンバーが各自の研究システムを作るための、共通の開発用ひな形です。
+Next.js（画面）・FastAPI（API）・MongoDB（データベース）の3サービスを、Docker Composeでまとめて起動します。
+サンプル機能は「メモの保存・一覧表示」のみです。認証やAI連携などは、必要になってから追加します。
 
-**Next.js → FastAPI → MongoDB** の3サービスを Docker Compose で起動します。
-サンプル機能は「メモの保存・一覧表示」のみです。認証やAI連携などは必要になってから追加します。
+## まず、自分のOSの手順を開いてください
 
-## はじめに
+| 利用するPC | 詳しい手順 |
+| --- | --- |
+| Mac | **[Mac用の利用手順](docs/setup-mac.md)** |
+| Windows | **[Windows用の利用手順](docs/setup-windows.md)** |
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) をインストールし、起動しておきます。
-- Gitを使う場合はGitも必要です。Node.js・Python・MongoDBをMacへ個別に入れる必要はありません。
-- 初回はイメージの取得とビルドで数分かかり、数GB以上の空き容量を使います。
-- このひな形は自分のPCで開発するためのものです。画面とAPIは `127.0.0.1` に限定し、MongoDBのポートはPC側へ公開しません。認証は未実装なので、実際の研究データの収集やサーバー公開の前に必要な認証・アクセス制御を追加してください。
+それぞれの手順書に、次の内容をまとめています。
 
-## メンバーの利用手順
+1. 必要なアプリの準備（WindowsはWSL 2の設定を含む）
+2. 共通ひな形から自分の非公開リポジトリを作成
+3. PCへ取得し、設定ファイルを準備
+4. 起動してメモの保存を確認
+5. 画面を編集し、変更をGitHubへ保存
+6. 終了・翌日の再開・困ったときの対処
 
-### 1. 自分の研究用リポジトリを作る
+GitHubの操作はGitHub Desktop、編集はVS Codeを使う流れです。起動コマンドはMacではターミナル、WindowsではPowerShellに入力します。
+Node.js・Python・MongoDBをPCへ個別に入れる必要はありません。MAMPとは独立して使えます。
 
-GitHub上でこのリポジトリの **Use this template → Create a new repository** を選びます。
-自分の研究に合う名前を付け、公開範囲は **Private** にします。
-元のStarterは研究室共通のひな形として残し、研究の変更は自分のリポジトリへ保存します。
+このリポジトリは非公開です。メンバーが開くには管理者からの招待と、その承諾が必要です。
+自分の研究用リポジトリも **Private** で作成します。
 
-非公開のStarterを閲覧するには、管理者からGitHubでアクセス権を付与されている必要があります。
+## 準備済みの方の起動・停止
 
-### 2. Macに取得する
+Docker Desktopを起動し、`.env` を準備済みであることを確認します。
+`compose.yaml` がある自分のプロジェクトのフォルダで実行してください。
 
-ターミナルで実行します。URLとフォルダ名は、手順1で作った自分のリポジトリに合わせて置き換えてください。
-
-```bash
-mkdir -p ~/Projects
-cd ~/Projects
-git clone <自分のリポジトリのURL> my-research
-cd my-research
-cp .env.example .env
-```
-
-すでに `.env` がある場合はコピーし直さず、その内容を確認してください。
-Gitを使わず動作だけ試す場合は、GitHubの **Code → Download ZIP** から取得・展開し、そのフォルダ内で同じ設定と起動手順を実行できます。
-
-### 3. 起動する
-
-`compose.yaml` があるフォルダで実行します。
-
-```bash
+```text
 docker compose up --build
 ```
 
-起動後、次を開きます。
-
 | 用途 | URL |
 | --- | --- |
-| サンプル画面 | http://localhost:3000 |
-| APIの仕様・試行画面 | http://localhost:3000/api/docs |
-| 接続確認 | http://localhost:3000/api/health |
+| サンプル画面 | [http://localhost:3000](http://localhost:3000) |
+| APIの仕様・試行画面 | [http://localhost:3000/api/docs](http://localhost:3000/api/docs) |
+| 接続確認 | [http://localhost:3000/api/health](http://localhost:3000/api/health) |
 
-「API・データベース接続済み」と表示されたら、メモを1件保存してください。
-ページを再読み込みしてメモが残っていれば、画面・API・データベースの接続を確認できます。
+「API・データベース接続済み」と表示されたら、テスト用のメモを1件保存します。
+ブラウザを再読み込みしてメモが残っていれば、画面・API・データベースの接続を確認できます。
 
-### 4. 停止・再開する
+停止するときは起動中の画面で **Control + C（WindowsではCtrl + C）** を押し、停止完了後に次を実行します。
 
-起動中のターミナルで **Control + C** を押すと停止します。
-コンテナとネットワークも片付ける場合は次を実行します。保存したメモは専用ボリュームに残ります。
-
-```bash
+```text
 docker compose down
 ```
 
-再開するときは `docker compose up`、設定や依存パッケージを変更したときは `docker compose up --build` を実行します。
-`docker compose down -v` はデータ用ボリュームも削除するため、通常の停止には使わないでください。
+保存したメモは専用ボリュームに残ります。**`docker compose down -v` はデータも削除するため、通常の停止には使いません。**
+次回は同じフォルダで `docker compose up` を実行して再開します。
 
 ## どこを編集するか
 
@@ -94,17 +81,22 @@ morimoto-lab-starter/
 │   ├── Dockerfile
 │   ├── .dockerignore
 │   └── requirements.txt
+├── docs/
+│   ├── setup-mac.md           # Mac用の利用手順
+│   └── setup-windows.md       # Windows用の利用手順
 ├── compose.yaml
-├── .env.example
+├── .env.example              # 各自が.envへコピーして使う
 ├── .gitignore
 └── README.md
 ```
 
 - 画面を作る：`frontend/src/app/` を編集します。
 - APIを作る：`backend/app/routes/` にファイルを追加し、`main.py` に登録します。
-- 上記のソース変更は起動中のコンテナに反映されます。
-- `package.json`・`package-lock.json`・`requirements.txt`・Dockerfile・設定ファイルを変えたら再ビルドします。
-- `.env` は各自の設定です。Gitには含まれません。共有する設定項目は、秘密の値を入れず `.env.example` に記載します。
+- `frontend/src` と `backend/app` は、起動中のコンテナへ変更が共有されます。Windowsでは自動更新されない場合があるため、[Windows用手順の編集方法](docs/setup-windows.md#8-画面を1か所編集してみる)も確認してください。
+- `package.json`・`package-lock.json`・`requirements.txt`・Dockerfile・`next.config.mjs` などの変更後は、停止して `docker compose up --build` で再ビルドします。
+- `.env` は各自の設定で、Gitには含まれません。共有する設定項目は、秘密の値を入れず `.env.example` に記載します。
+
+GitHubにはプログラムと変更履歴を保存します。MongoDB内のメモは含まれないため、実際の研究データには別途バックアップが必要です。
 
 ## API
 
@@ -116,29 +108,45 @@ morimoto-lab-starter/
 
 メモは前後の空白を除いて1〜500文字です。
 ブラウザからは同じオリジンの `/api/*` に接続し、Next.js経由でFastAPIへ転送します。
-FastAPIへ直接接続する場合は http://localhost:8000/api/docs を使えます。
+FastAPIへ直接接続する場合は [http://localhost:8000/api/docs](http://localhost:8000/api/docs) を使えます。
 
-## よくあるつまずき
+## 利用範囲と設定
 
-- **Dockerに接続できない**：Docker Desktopの起動が完了しているか確認します。
-- **ポートが使用中**：`.env` の `FRONTEND_PORT` と `BACKEND_PORT` を別の番号（例：3001・8001）に変更して起動します。画面URLも変更後の番号に合わせます。
-- **画面が未接続**：`docker compose ps` と `docker compose logs backend mongodb` で状態を確認します。MongoDBが準備できてからAPI、APIが準備できてから画面が起動します。
-- **変更が反映されない**：設定や依存パッケージの変更後は `docker compose up --build` を実行します。
-- **複数の研究プロジェクトを動かす**：異なるフォルダ名・異なるポートを使います。Composeのプロジェクト名とデータ用ボリュームはフォルダ名を基に分かれます。同じフォルダ名を使う場合は `docker compose -p 名前 ...` でプロジェクト名を明示し、停止時にも同じ名前を指定します。
+このひな形は自分のPCでの開発用です。画面とAPIは `127.0.0.1` に限定し、MongoDBのポートはPC側へ公開しません。
+認証は未実装なので、実際の研究データの収集やサーバー公開の前に、必要な認証・アクセス制御を追加してください。
+
+ポートが使用中の場合は、`.env` の `FRONTEND_PORT` と `BACKEND_PORT` を別の番号（例：3001・8001）に変更し、再起動します。ブラウザのURLも変更後の番号に合わせます。
+
+複数の研究プロジェクトを動かす場合は、異なるフォルダ名・異なるポートを使います。
+Composeのプロジェクト名とデータ用ボリュームは、フォルダ名を基に分かれます。同じフォルダ名を使う場合は `docker compose -p 名前 ...` でプロジェクト名を明示し、起動・状態確認・停止で同じ名前を指定します。
+すでにデータがあるプロジェクトのフォルダ名を変更する場合は、保存領域との対応にも注意してください。
 
 ## 管理者の配布手順
 
 1. このリポジトリをGitHubの非公開リポジトリとして配置します。
 2. リポジトリのSettingsで **Template repository** を有効にします。
 3. 利用するメンバーをリポジトリのCollaborators、または研究室Organizationの適切なTeamに追加します。
-4. リポジトリのURLと「メンバーの利用手順」を案内します。
+4. 招待を承諾してもらい、リポジトリのURLと各OSの手順書を案内します。
 
-メンバーの招待は管理者が対象者を確認して実施してください。
-MAMPのプロジェクトとは独立して動作します。
+メンバーの招待は、管理者が対象者を確認して実施してください。
+メンバーが自分のアカウントに作った非公開リポジトリを管理者も閲覧する場合は、そのリポジトリへの招待が別途必要です。
 
-## 参考資料
+## 動作確認状況
+
+2026年10月8日時点で、次を確認しています。
+
+- Mac上でNext.jsの型チェック・本番ビルド、FastAPI・MongoDBと連携したメモの保存・取得を確認。
+- データベース再起動後のデータ保持、入力エラー、接続できない場合の動作を確認。
+- Docker Composeの設定ファイルを検証。
+
+**Docker Desktopによる一括ビルド・起動と、Windows実機での実行は未確認です。**
+OS別手順は公式資料とこのリポジトリの設定に基づくもので、両OSの実機検証完了を示すものではありません。
+
+## 技術資料
 
 - [Next.js：基本構成と起動](https://nextjs.org/docs/app/getting-started/installation)
 - [FastAPI：接続の開始・終了を管理するlifespan](https://fastapi.tiangolo.com/advanced/events/)
 - [MongoDB：PyMongoの接続](https://www.mongodb.com/docs/languages/python/pymongo-driver/current/connect/mongoclient/)
 - [Docker Compose：起動順序とhealthcheck](https://docs.docker.com/compose/how-tos/startup-order/)
+
+インストールやGitHubの操作に関する公式資料は、各OSの手順書から参照できます。
