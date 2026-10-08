@@ -1,6 +1,6 @@
 # 森本研究室 システム開発スターター
 
-**最終更新日時：2026-10-08 20:34（日本時間／JST）**
+**最終更新日時：2026-10-08 20:46（日本時間／JST）**
 
 **更新者：中沢尚也**
 
@@ -9,6 +9,65 @@
 森本研究室のメンバーが各自の研究システムを作るための、共通の開発用ひな形です。
 Next.js（画面）・FastAPI（API）・MongoDB（データベース）の3サービスを、Docker Composeでまとめて起動します。
 サンプル機能は「メモの保存・一覧表示」のみです。認証やAI連携などは、必要になってから追加します。
+
+## システム構成
+
+**各メンバーのMac・Windowsの中で動く、開発用の構成です。**
+Docker Composeが、画面・API・データベースの3つをまとめて起動します。
+
+```mermaid
+flowchart LR
+    browser["ブラウザ<br/>メモを操作"]
+    subgraph docker["Docker Desktop 内"]
+        subgraph services["Composeで起動する3つのサービス"]
+            frontend["Next.js<br/>画面"]
+            backend["FastAPI<br/>API・処理"]
+            mongodb["MongoDB<br/>データベース"]
+            frontend -->|"/api/*"| backend
+            backend -->|"保存・取得"| mongodb
+        end
+        data[("データ保存領域<br/>mongodb_data")]
+        mongodb --- data
+    end
+    browser -->|"localhost:3000"| frontend
+
+    classDef screen fill:#eaf2ff,stroke:#3b6ea8,color:#16324f;
+    classDef api fill:#e6f5f1,stroke:#398577,color:#19483f;
+    classDef storage fill:#fff4df,stroke:#ae7c24,color:#61430e;
+    class browser,frontend screen;
+    class backend api;
+    class mongodb,data storage;
+```
+
+矢印は依頼の流れです。処理結果は同じ経路を逆向きに戻り、ブラウザに表示されます。
+図が表示されない環境では、**ブラウザ → Next.js → FastAPI → MongoDB** の順に読み進めてください。
+
+### メモを保存するときの流れ
+
+1. ブラウザでメモを入力し、保存ボタンを押します。
+2. Next.jsが `/api/samples` への依頼をFastAPIへ転送します。
+3. FastAPIが入力内容を確認し、MongoDBへ保存します。結果が画面へ戻り、メモの一覧が更新されます。
+
+| 部分 | 役割・接続先 | 対応する設定・ファイル |
+| --- | --- | --- |
+| Next.js（`frontend`） | 画面の表示。ブラウザから `http://localhost:3000` で開く | `frontend/src/app/` |
+| FastAPI（`backend`） | メモの保存・取得。Next.jsから内部の `http://backend:8000` へ接続 | `backend/app/`、`frontend/next.config.mjs` |
+| MongoDB（`mongodb`） | メモのデータベース。FastAPIから内部の `mongodb://mongodb:27017` へ接続 | `backend/app/db.py`、`compose.yaml` |
+| データ保存領域 | `mongodb_data` という名前付きボリュームを、MongoDBの `/data/db` に接続 | `compose.yaml` の `volumes` |
+
+- ポート番号は初期設定です。画面とAPIは自分のPCからだけアクセスでき、MongoDBのポートはPC側へ公開していません。APIを直接試す場合は `http://localhost:8000/api/docs` を開けます。
+- 3つのサービスはComposeの共通ネットワークで接続します。データ保存領域はコンテナと別に管理され、通常の `docker compose down` ではメモが残ります。
+- **GitHubはプログラムの共有・変更履歴の管理に使います。** メモは各自のPC内に保存されます。GitHub Desktopは取得・更新を助ける任意のアプリで、上の実行構成には含まれません。
+
+この図は [compose.yaml](compose.yaml)、[Next.jsの転送設定](frontend/next.config.mjs)、[MongoDBの接続処理](backend/app/db.py) に基づいています。Dockerでの一括起動などの確認状況は、[動作確認状況](#動作確認状況)を参照してください。
+
+### 構成図の参考資料
+
+参照日：2026-10-08。以下を参考に、このひな形の設定に合わせて作図しました。
+
+- [Docker公式：Composeの構成図とアプリケーションモデル](https://docs.docker.com/compose/intro/compose-application-model/#illustrative-example)：サービスの範囲、通信、データ保存領域を分けて示す表現を参考にしました。
+- [GitHub：docker/awesome-compose の React・Express・MongoDBの例](https://github.com/docker/awesome-compose/tree/master/react-express-mongodb)：画面・API・MongoDBを3サービスとして整理する構成を参考にしました。このひな形では、画面にNext.js、APIにFastAPIを使います。
+- [GitHub公式：Markdownに図を記載する方法](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams)：README内で編集できるMermaid形式を採用しました。
 
 ## まず、自分のOSの手順を開いてください
 
