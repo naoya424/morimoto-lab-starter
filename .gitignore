@@ -1,0 +1,24 @@
+# macOS
+.DS_Store
+
+# Local environment variables / credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Next.js / Node.js
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+*.log
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
