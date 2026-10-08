@@ -1,6 +1,6 @@
 # 森本研究室 システム開発スターター
 
-**最終更新日時：2026-10-08 20:46（日本時間／JST）**
+**最終更新日時：2026-10-08 21:00（日本時間／JST）**
 
 **更新者：中沢尚也**
 
@@ -8,11 +8,11 @@
 
 森本研究室のメンバーが各自の研究システムを作るための、共通の開発用ひな形です。
 Next.js（画面）・FastAPI（API）・MongoDB（データベース）の3サービスを、Docker Composeでまとめて起動します。
-サンプル機能は「メモの保存・一覧表示」のみです。認証やAI連携などは、必要になってから追加します。
+サンプル機能は「メモの保存・一覧表示」です。研究システムでのAI利用も想定し、[OpenAI APIとの連携を追加する手順](docs/ai-integration.md)を用意しています。AIの接続処理や認証は、各研究用プロジェクトで追加します。
 
 ## システム構成
 
-**各メンバーのMac・Windowsの中で動く、開発用の構成です。**
+**基本の3サービスは各メンバーのMac・Windowsで動き、AI連携を追加すると外部のAI APIへ接続します。**
 Docker Composeが、画面・API・データベースの3つをまとめて起動します。
 
 ```mermaid
@@ -30,16 +30,19 @@ flowchart TB
         mongodb --- data
     end
     browser -->|"localhost:3000"| frontend
+    external_ai["外部AI API<br/>OpenAIなど・インターネット上"]
+    backend -.->|"AI連携を追加する場合"| external_ai
 
     classDef screen fill:#eaf2ff,stroke:#3b6ea8,color:#16324f;
     classDef api fill:#e6f5f1,stroke:#398577,color:#19483f;
     classDef storage fill:#fff4df,stroke:#ae7c24,color:#61430e;
     class browser,frontend screen;
-    class backend api;
+    class backend,external_ai api;
     class mongodb,data storage;
 ```
 
 矢印は依頼の流れです。処理結果は同じ経路を逆向きに戻り、ブラウザに表示されます。
+**外部AIへ向かう点線は追加実装する部分で、現在のStarterでは未接続です。**
 図が表示されない環境では、**ブラウザ → Next.js → FastAPI → MongoDB** の順に読み進めてください。
 
 ### メモを保存するときの流れ
@@ -68,6 +71,17 @@ flowchart TB
 - [Docker公式：Composeの構成図とアプリケーションモデル](https://docs.docker.com/compose/intro/compose-application-model/#illustrative-example)：サービスの範囲、通信、データ保存領域を分けて示す表現を参考にしました。
 - [GitHub：docker/awesome-compose の React・Express・MongoDBの例](https://github.com/docker/awesome-compose/tree/master/react-express-mongodb)：画面・API・MongoDBを3サービスとして整理する構成を参考にしました。このひな形では、画面にNext.js、APIにFastAPIを使います。
 - [GitHub公式：Markdownに図を記載する方法](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams)：README内で編集できるMermaid形式を採用しました。
+
+## AI連携を追加する場合
+
+研究システムでAIを使う場合は、**[AI連携の追加手順（OpenAI APIの例）](docs/ai-integration.md)** を参照してください。Mac・Windowsで共通の手順です。
+
+- 構成：ブラウザ → Next.js → FastAPI → OpenAI API。
+- 設定：APIキーは各自の `.env` に保存し、backendだけへ渡します。
+- 実装例：公式Python SDKのResponses APIを使った、短い文章の送信・回答取得。
+- 他社API：AIを呼び出すファイルを中心に、認証・SDK・入出力の形式を変更します。
+
+**手順とコード例を追加した段階で、AI機能はまだStarterに組み込まれていません。** キーの入力だけでは有効にならないため、手順書に沿って設定・ファイル・APIの登録を追加してください。参考GitHub・公式サイト、料金とデータ送信の確認事項も同じページにまとめています。
 
 ## まず、自分のOSの手順を開いてください
 
@@ -161,7 +175,8 @@ morimoto-lab-starter/
 │   └── requirements.txt
 ├── docs/
 │   ├── setup-mac.md           # Mac用の利用手順
-│   └── setup-windows.md       # Windows用の利用手順
+│   ├── setup-windows.md       # Windows用の利用手順
+│   └── ai-integration.md      # AI連携を追加する場合の手順
 ├── compose.yaml
 ├── .env.example              # 各自が.envへコピーして使う
 ├── .gitignore
